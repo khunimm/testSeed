@@ -52,10 +52,14 @@ class _BottomNavbarState extends State<BottomNavbar> {
           return Container(
             decoration: BoxDecoration(
               color: whiteColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0),
+              ),
               boxShadow: [
                 BoxShadow(
                   blurRadius: 20,
-                  color: blackColor.withOpacity(.1),
+                  color: greyColor,
                 )
               ],
             ),
@@ -69,7 +73,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
                 tabBackgroundColor: blueColor,
                 gap: 10,
                 iconSize: 22.w,
-                padding:  EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   horizontal: 10.w,
                   vertical: 10.w,
                 ),

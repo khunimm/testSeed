@@ -80,7 +80,11 @@ class _TextfieldFormatState extends State<TextfieldFormat> {
                           width: 0.5,
                         ),
                       ),
-                      contentPadding: EdgeInsets.all(10.w),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 15.w,
+                        horizontal: 10.w,
+                      ), //Change this value to custom as you like
+                      // contentPadding: EdgeInsets.all(10.w),
                       filled: true,
                       fillColor: widget.textFieldColor,
                       border: OutlineInputBorder(
@@ -137,7 +141,11 @@ class _TextfieldFormatState extends State<TextfieldFormat> {
                           width: 0.5,
                         ),
                       ),
-                      contentPadding: EdgeInsets.all(10.w),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 15.w,
+                        horizontal: 10.w,
+                      ),
+                      // contentPadding: EdgeInsets.all(10.w),
                       filled: true,
                       fillColor: widget.textFieldColor,
                       border: OutlineInputBorder(
