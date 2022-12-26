@@ -117,7 +117,7 @@ class _RankState extends State<Rank> {
                             ],
                           ),
                           FontFormat(
-                            text: 'พระบาทสมเด็จพระบรมชนกาธิเบศร มหาภูมิพลอดุลยเดชมหาราช บรมนาถบพิตร',
+                            text: 'มณีจันทร์',
                             weight: FontWeight.w600,
                             textColor: whiteColor,
                             size: 15.w,

@@ -9,7 +9,7 @@ import 'package:seed/components/font_format.dart';
 import 'package:seed/components/textfield_format.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const phoneNumber = '+0918049645';
+const phoneNumber = '0918049645';
 const urlTel = 'tel:$phoneNumber';
 
 class LoginPage extends StatefulWidget {

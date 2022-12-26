@@ -44,7 +44,7 @@ class _RedeemCoinState extends State<RedeemCoin> {
                       weight: FontWeight.w600,
                     ),
                     FontFormat(
-                      text: 'อย่าลืมสะสมคะแนนเพื่อแลกรับรางวัลนะค่ะ',
+                      text: 'อย่าลืมสะสมคะแนนเพื่อแลกรับรางวัลนะ',
                       align: TextAlign.center,
                     ),
                   ],

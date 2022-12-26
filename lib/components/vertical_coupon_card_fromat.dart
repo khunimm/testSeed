@@ -136,11 +136,11 @@ class VerticalCouponCardFromat extends StatelessWidget {
                           size: 16.w,
                         ),
                         FontFormat(
-                          text: 'เบอร์โทร : $phoneNumber',
+                          text: 'เบอร์โทรศัพท์ : $phoneNumber',
                           size: 16.w,
                         ),
                         FontFormat(
-                          text: 'เมล : $email',
+                          text: 'อีเมล : $email',
                           size: 16.w,
                         ),
                       ],

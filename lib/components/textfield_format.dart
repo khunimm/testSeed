@@ -150,7 +150,7 @@ class _TextfieldFormatState extends State<TextfieldFormat> {
                       color: widget.textColor,
                     ),
                     decoration: InputDecoration(
-                      labelText: ' ${widget.label} ',
+                      labelText: widget.label != null ? ' ${widget.label} ' : null,
                       labelStyle: GoogleFonts.prompt(
                         color: whiteColor,
                         // backgroundColor: blueColor,
@@ -160,7 +160,7 @@ class _TextfieldFormatState extends State<TextfieldFormat> {
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: widget.focusTextFieldColor!,
-                          width: 1.5.w,
+                          width: 1.w,
                         ),
                         borderRadius: BorderRadius.circular(5),
                       ),
