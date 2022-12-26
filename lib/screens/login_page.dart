@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,19 +59,28 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         TextfieldFormat(
-                          text: 'อีเมล',
+                          label: 'อีเมล',
+                          text: 'example@xyz.com',
                           keyboardType: TextInputType.emailAddress,
                           textFieldColor: blueShadow,
+                          borderColor: blueShadow,
+                          focusTextFieldColor: whiteColor,
                           textColor: whiteColor,
                           shadow: Colors.transparent,
                           hintColor: Color(0xffA0A5C9),
                         ),
+                        SizedBox(
+                          height: 10.w,
+                        ),
                         TextfieldFormat(
-                          text: 'เลขบัตรประจำตัวประชาชน',
+                          label: 'รหัสผ่าน',
+                          text: 'รหัสผ่าน',
                           keyboardType: TextInputType.visiblePassword,
                           textFieldColor: blueShadow,
+                          borderColor: blueShadow,
                           textColor: whiteColor,
                           shadow: Colors.transparent,
+                          focusTextFieldColor: whiteColor,
                           hintColor: Color(0xffA0A5C9),
                           defaultIcon: Iconsax.eye_slash,
                           icon: Iconsax.eye,

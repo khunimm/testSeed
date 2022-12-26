@@ -7,6 +7,10 @@ import 'package:seed/components/color.dart';
 
 class TextfieldFormat extends StatefulWidget {
   final String? text;
+  final String? helper;
+  final String? label;
+  final Color? focusTextFieldColor;
+  final Color? borderColor;
   final Color? textFieldColor;
   final TextEditingController? controller;
   final Color? shadow;
@@ -31,6 +35,10 @@ class TextfieldFormat extends StatefulWidget {
     this.defaultIcon,
     this.keyboardType,
     this.validator,
+    this.helper,
+    this.label,
+    this.focusTextFieldColor,
+    this.borderColor,
   }) : super(key: key);
 
   @override
@@ -70,14 +78,25 @@ class _TextfieldFormatState extends State<TextfieldFormat> {
                       color: widget.textColor,
                     ),
                     decoration: InputDecoration(
+                      labelText: ' ${widget.label}',
+                      labelStyle: GoogleFonts.prompt(
+                        color: whiteColor,
+                        // backgroundColor: blueColor,
+                      ),
+
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      helperText: widget.helper,
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: widget.textFieldColor!),
+                        borderSide: BorderSide(
+                          color: widget.focusTextFieldColor!,
+                          width: 1.5.w,
+                        ),
                         borderRadius: BorderRadius.circular(5),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: widget.textFieldColor!,
-                          width: 0.5,
+                          color: widget.borderColor!,
+                          width: 1.w,
                         ),
                       ),
                       contentPadding: EdgeInsets.symmetric(
@@ -131,14 +150,24 @@ class _TextfieldFormatState extends State<TextfieldFormat> {
                       color: widget.textColor,
                     ),
                     decoration: InputDecoration(
+                      labelText: ' ${widget.label} ',
+                      labelStyle: GoogleFonts.prompt(
+                        color: whiteColor,
+                        // backgroundColor: blueColor,
+                      ),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      helperText: widget.helper,
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: widget.textFieldColor!),
+                        borderSide: BorderSide(
+                          color: widget.focusTextFieldColor!,
+                          width: 1.5.w,
+                        ),
                         borderRadius: BorderRadius.circular(5),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: widget.textFieldColor!,
-                          width: 0.5,
+                          color: widget.borderColor!,
+                          width: 1.w,
                         ),
                       ),
                       contentPadding: EdgeInsets.symmetric(
