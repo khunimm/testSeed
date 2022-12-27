@@ -3,21 +3,22 @@
     <queries>
         <!-- If your app checks for SMS support -->
         <intent>
-        <action android:name="android.intent.action.VIEW" />
-        <data android:scheme="sms" />
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="sms" />
         </intent>
         <!-- If your app checks for call support -->
         <intent>
-        <action android:name="android.intent.action.VIEW" />
-        <data android:scheme="tel" />
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="tel" />
         </intent>
     </queries>
    <application
+        android:requestLegacyExternalStorage="true"
         android:label="SEED"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true">
+        >
 
         <activity
             android:name=".MainActivity"
