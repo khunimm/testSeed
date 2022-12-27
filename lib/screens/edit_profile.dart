@@ -302,7 +302,7 @@ class _EditProfileState extends State<EditProfile> {
                                 height: 50.w,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    image: AssetImage('images/Vector (Stroke).png'),
+                                    image: AssetImage('images/gallery.png'),
                                     fit: BoxFit.fill,
                                   ),
                                 ),
@@ -342,7 +342,7 @@ class _EditProfileState extends State<EditProfile> {
                                 height: 50.w,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    image: AssetImage('images/Subtract.png'),
+                                    image: AssetImage('images/camera.png'),
                                     fit: BoxFit.fill,
                                   ),
                                 ),
