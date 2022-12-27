@@ -128,6 +128,8 @@ class _RewardpageState extends State<Rewardpage> {
                       SizedBox(height: 5.w),
                       TextfieldFormat(
                         text: 'ชื่อ',
+                        borderColor: Colors.transparent,
+                        focusTextFieldColor: blueColor,
                         textFieldColor: whiteColor,
                         textColor: blackColor,
                         shadow: shadow,
@@ -137,6 +139,8 @@ class _RewardpageState extends State<Rewardpage> {
                       ),
                       TextfieldFormat(
                         text: 'นามสกุล',
+                        borderColor: Colors.transparent,
+                        focusTextFieldColor: blueColor,
                         hintColor: greyColor,
                         textFieldColor: whiteColor,
                         textColor: blackColor,
@@ -146,6 +150,8 @@ class _RewardpageState extends State<Rewardpage> {
                       ),
                       TextfieldFormat(
                         text: 'เบอร์โทรศัพท์',
+                        borderColor: Colors.transparent,
+                        focusTextFieldColor: blueColor,
                         hintColor: greyColor,
                         textFieldColor: whiteColor,
                         textColor: blackColor,
@@ -155,6 +161,8 @@ class _RewardpageState extends State<Rewardpage> {
                       ),
                       TextfieldFormat(
                         text: 'อีเมล',
+                        borderColor: Colors.transparent,
+                        focusTextFieldColor: blueColor,
                         hintColor: greyColor,
                         textFieldColor: whiteColor,
                         textColor: blackColor,
@@ -208,6 +216,8 @@ class _RewardpageState extends State<Rewardpage> {
                       SizedBox(height: 5.w),
                       TextfieldFormat(
                         text: 'ที่อยู่',
+                        borderColor: Colors.transparent,
+                        focusTextFieldColor: blueColor,
                         hintColor: greyColor,
                         textFieldColor: whiteColor,
                         textColor: blackColor,
@@ -217,6 +227,8 @@ class _RewardpageState extends State<Rewardpage> {
                       ),
                       TextfieldFormat(
                         text: 'แขวง/ตำบล',
+                        borderColor: Colors.transparent,
+                        focusTextFieldColor: blueColor,
                         hintColor: greyColor,
                         textFieldColor: whiteColor,
                         textColor: blackColor,
@@ -226,6 +238,8 @@ class _RewardpageState extends State<Rewardpage> {
                       ),
                       TextfieldFormat(
                         text: 'เขต/อำเภอ',
+                        borderColor: Colors.transparent,
+                        focusTextFieldColor: blueColor,
                         hintColor: greyColor,
                         textFieldColor: whiteColor,
                         textColor: blackColor,
@@ -235,6 +249,8 @@ class _RewardpageState extends State<Rewardpage> {
                       ),
                       TextfieldFormat(
                         text: 'จังหวัด',
+                        borderColor: Colors.transparent,
+                        focusTextFieldColor: blueColor,
                         hintColor: greyColor,
                         textFieldColor: whiteColor,
                         textColor: blackColor,
@@ -246,6 +262,8 @@ class _RewardpageState extends State<Rewardpage> {
                         width: MediaQuery.of(context).size.width / 3,
                         child: TextfieldFormat(
                           text: 'รหัสไปรษณีย์',
+                          borderColor: Colors.transparent,
+                          focusTextFieldColor: blueColor,
                           hintColor: greyColor,
                           textFieldColor: whiteColor,
                           textColor: blackColor,
