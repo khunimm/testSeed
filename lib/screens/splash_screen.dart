@@ -58,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       children: [
                         Center(
                           child: FontFormat(
-                            text: 'powered by Alpaca media and technology solutions\nver 1.0.1',
+                            text: 'powered by \nAlpaca media and technology solutions\nv1.0.1',
                             align: TextAlign.center,
                             textColor: greyColor,
                             size: 12.w,

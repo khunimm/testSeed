@@ -41,6 +41,7 @@ class _ContactUsState extends State<ContactUs> {
           textColor: greyColor,
           size: 20.sp,
         ),
+        centerTitle: true,
       ),
       body: Stack(
         children: [

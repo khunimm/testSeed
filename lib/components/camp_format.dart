@@ -114,27 +114,30 @@ class CampFormat extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 5.w),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            FontFormat(
-                              text: 'จำนวนคนที่รับสมัคร',
-                              textColor: greyColor,
-                              size: 12.w,
-                            ),
-                            SizedBox(height: 5.w),
-                            FontFormat(
-                              text: 'ช่วงเวลากิจกรรม',
-                              textColor: greyColor,
-                              size: 12.w,
-                            ),
-                            SizedBox(height: 5.w),
-                            FontFormat(
-                              text: 'สถานที่จัดกิจกรรม',
-                              textColor: greyColor,
-                              size: 12.w,
-                            ),
-                          ],
+                        Expanded(
+                          flex:2,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              FontFormat(
+                                text: 'จำนวนคนที่รับสมัคร',
+                                textColor: greyColor,
+                                size: 10.w,
+                              ),
+                              SizedBox(height: 5.w),
+                              FontFormat(
+                                text: 'ช่วงเวลากิจกรรม',
+                                textColor: greyColor,
+                                size: 10.w,
+                              ),
+                              SizedBox(height: 5.w),
+                              FontFormat(
+                                text: 'สถานที่จัดกิจกรรม',
+                                textColor: greyColor,
+                                size: 10.w,
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(width: 5.w),
                         Expanded(
@@ -144,19 +147,19 @@ class CampFormat extends StatelessWidget {
                             children: [
                               FontFormat(
                                 text: persons,
-                                size: 12.w,
+                                size: 10.w,
                                 textColor: blackColor,
                               ),
                               SizedBox(height: 5.w),
                               FontFormat(
                                 text: period,
-                                size: 12.w,
+                                size: 10.w,
                                 textColor: blackColor,
                               ),
                               SizedBox(height: 5.w),
                               FontFormat(
                                 text: location,
-                                size: 12.w,
+                                size: 10.w,
                                 line: 1,
                                 overflow: TextOverflow.ellipsis,
                                 textColor: blackColor,

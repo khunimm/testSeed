@@ -51,10 +51,10 @@ class _RankState extends State<Rank> {
                       child: Column(
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              SizedBox(
-                                width: 80.w,
+                              Expanded(
+                                // width: 100.w,
                                 child: Column(
                                   children: [
                                     FontFormat(
@@ -71,8 +71,8 @@ class _RankState extends State<Rank> {
                                   ],
                                 ),
                               ),
-                              SizedBox(
-                                width: 80.w,
+                              Expanded(
+                                // width: 80.w,
                                 child: Column(
                                   children: [
                                     Container(
@@ -96,8 +96,8 @@ class _RankState extends State<Rank> {
                                   ],
                                 ),
                               ),
-                              SizedBox(
-                                width: 80.w,
+                              Expanded(
+                                // width: 100.w,
                                 child: Column(
                                   children: [
                                     FontFormat(

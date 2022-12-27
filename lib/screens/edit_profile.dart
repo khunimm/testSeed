@@ -57,6 +57,7 @@ class _EditProfileState extends State<EditProfile> {
           textColor: greyColor,
           size: 20.sp,
         ),
+        centerTitle: true,
       ),
       body: ScreenUtilInit(
         builder: (BuildContext context, Widget? child) {
@@ -133,7 +134,7 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                       ),
                       FontFormat(
-                        text: 'ข้อมูลผู้รับ',
+                        text: 'ข้อมูลส่วนบุคคล',
                         size: 16.w,
                         weight: FontWeight.w600,
                       ),
@@ -191,7 +192,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                       SizedBox(height: 10.w),
                       FontFormat(
-                        text: 'ที่อยู่จัดส่ง',
+                        text: 'ที่อยู่',
                         size: 16.w,
                         weight: FontWeight.w600,
                       ),
@@ -263,7 +264,7 @@ class _EditProfileState extends State<EditProfile> {
                   editProfile();
                 },
                 icon: Iconsax.location_tick,
-                title: 'ยืนยันข้อมูลที่อยู่',
+                title: 'ยืนยันแก้ไขข้อมูล',
               ),
             ],
           );

@@ -53,15 +53,15 @@ class _RewardpageState extends State<Rewardpage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 20.w),
-                      Center(
-                        child: FontFormat(
-                          text: 'ยินดีด้วย! กรุณากรอกชื่อที่อยู่เพื่อจัดส่ง',
-                          textColor: blueColor,
-                          size: 20.w,
-                          weight: FontWeight.w600,
-                        ),
-                      ),
+                      // SizedBox(height: 20.w),
+                      // Center(
+                      //   child: FontFormat(
+                      //     text: 'ยินดีด้วย! กรุณากรอกชื่อที่อยู่เพื่อจัดส่ง',
+                      //     textColor: blueColor,
+                      //     size: 20.w,
+                      //     weight: FontWeight.w600,
+                      //   ),
+                      // ),
                       Padding(
                         padding: EdgeInsets.only(
                           top: 16.w,
