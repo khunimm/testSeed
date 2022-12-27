@@ -49,8 +49,7 @@ class _RankPolicyState extends State<RankPolicy> {
                         text: '1. ช่วงเวลาการจัดอันดับ : อันดับของแต่ละรอบจะคงอยู่เป็นเวลา 1 ปี',
                       ),
                       FontFormat(
-                        text:
-                            '2. กฎการจัดอันดับ : กลุ่มอันดับมีทั้งหมด 4 กลุ่ม ได้แก่ Rookie, Bronze, Silver, Gold ในนี้จะมีการ จัดระดับย่อย เช่น Rookie I-V',
+                        text: '2. กฎการจัดอันดับ : กลุ่มอันดับมีทั้งหมด 4 กลุ่ม ได้แก่ Rookie, Bronze, Silver, Gold ในนี้จะมีการ จัดระดับย่อย เช่น Rookie I-V',
                       ),
                       FontFormat(
                         text: '3. กฎการได้รับคะแนน : เมื่อเข้าร่วมกิจกรรมและสามารถทําตามกฎของกิจกรรมได้ครบถ้วนจะได้รับคะแนนที่กิจกรรมกําหนดไหว',
@@ -65,49 +64,49 @@ class _RankPolicyState extends State<RankPolicy> {
                         text: '4.1 เกณฑ์การขึ้นลําดับ',
                       ),
                       FontFormat(
-                        text: '    Rookie I : 0 - 99 points',
+                        text: '    Rookie V : 0 - 99 points',
                       ),
                       FontFormat(
-                        text: '    Rookie II : 100 - 199 points',
+                        text: '    Rookie IV : 100 - 199 points',
                       ),
                       FontFormat(
                         text: '    Rookie III : 200 - 299 points',
                       ),
                       FontFormat(
-                        text: '    Rookie IV : 300 - 399 points',
+                        text: '    Rookie II : 300 - 399 points',
                       ),
                       FontFormat(
-                        text: '    Rookie V : 400 - 499 points',
+                        text: '    Rookie I : 400 - 499 points',
                       ),
                       FontFormat(
-                        text: '    Bronze I : 500 - 649 points',
+                        text: '    Bronze V : 500 - 649 points',
                       ),
                       FontFormat(
-                        text: '    Bronze II : 650 - 799 points',
+                        text: '    Bronze IV : 650 - 799 points',
                       ),
                       FontFormat(
                         text: '    Bronze III : 800 - 949 points',
                       ),
                       FontFormat(
-                        text: '    Bronze IV : 950 - 1099 points',
+                        text: '    Bronze II : 950 - 1099 points',
                       ),
                       FontFormat(
-                        text: '    Bronze V : 1100 - 1299 points',
+                        text: '    Bronze I : 1100 - 1299 points',
                       ),
                       FontFormat(
-                        text: '    Silver I  : 1300 - 1499 points',
+                        text: '    Silver V  : 1300 - 1499 points',
                       ),
                       FontFormat(
-                        text: '    Silver II : 1500 - 1699 points',
+                        text: '    Silver IV : 1500 - 1699 points',
                       ),
                       FontFormat(
                         text: '    Silver III : 1700 - 1899 points',
                       ),
                       FontFormat(
-                        text: '    Silver IV : 1900 - 2099 points',
+                        text: '    Silver II : 1900 - 2099 points',
                       ),
                       FontFormat(
-                        text: '    Silver V : 2100 - 2299 points',
+                        text: '    Silver I : 2100 - 2299 points',
                       ),
                       FontFormat(
                         text: '    Gold : 2300 points',
@@ -119,10 +118,10 @@ class _RankPolicyState extends State<RankPolicy> {
                         text: '    เข็มกลัด SEED Rookie : Rookie III',
                       ),
                       FontFormat(
-                        text: '    เข็มกลัด SEED Bronze : Bronze I',
+                        text: '    เข็มกลัด SEED Bronze : Bronze V',
                       ),
                       FontFormat(
-                        text: '    เข็มกลัด SEED Silver : Silver I',
+                        text: '    เข็มกลัด SEED Silver : Silver V',
                       ),
                       FontFormat(
                         text: '    เข็มกลัด SEED Gold : Gold',
