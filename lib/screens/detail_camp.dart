@@ -314,6 +314,7 @@ class _DetailCampState extends State<DetailCamp> {
                           ),
                         ),
                       );
+                      status = 'declined';
                     },
                     child: Container(
                       decoration: BoxDecoration(
