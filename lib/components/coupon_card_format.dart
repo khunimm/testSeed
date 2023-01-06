@@ -107,7 +107,7 @@ class CouponCardFormat extends StatelessWidget {
                             borderRadius: BorderRadius.circular(50),
                             image: DecorationImage(
                               image: AssetImage(image!),
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),

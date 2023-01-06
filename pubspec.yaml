@@ -46,6 +46,11 @@ dependencies:
   url_launcher: ^6.1.7
   #android is open
   video_player: ^2.4.9
+  flutter_countdown_timer: ^4.1.0
+  dio: ^4.0.6
+  fluttertoast: ^8.1.2
+  get_storage: ^2.0.3
+
   # path_provider: ^2.0.11
 
   # never_behind_keyboard: ^1.0.2

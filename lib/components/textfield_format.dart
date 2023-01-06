@@ -9,6 +9,8 @@ class TextfieldFormat extends StatefulWidget {
   final String? text;
   final String? helper;
   final String? label;
+  final Color? labelColor;
+  final Color? helperColor;
   final Color? focusTextFieldColor;
   final Color? borderColor;
   final Color? textFieldColor;
@@ -39,6 +41,8 @@ class TextfieldFormat extends StatefulWidget {
     this.label,
     this.focusTextFieldColor,
     this.borderColor,
+    this.labelColor,
+    this.helperColor,
   }) : super(key: key);
 
   @override
@@ -80,12 +84,15 @@ class _TextfieldFormatState extends State<TextfieldFormat> {
                     decoration: InputDecoration(
                       labelText: ' ${widget.label}',
                       labelStyle: GoogleFonts.prompt(
-                        color: whiteColor,
+                        color: widget.labelColor,
                         // backgroundColor: blueColor,
                       ),
 
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       helperText: widget.helper,
+                      helperStyle: GoogleFonts.prompt(
+                        color: widget.helperColor,
+                      ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: widget.focusTextFieldColor!,
@@ -102,7 +109,7 @@ class _TextfieldFormatState extends State<TextfieldFormat> {
                       contentPadding: EdgeInsets.symmetric(
                         vertical: 15.w,
                         horizontal: 10.w,
-                      ), //Change this value to custom as you like
+                      ),
                       // contentPadding: EdgeInsets.all(10.w),
                       filled: true,
                       fillColor: widget.textFieldColor,
@@ -152,11 +159,14 @@ class _TextfieldFormatState extends State<TextfieldFormat> {
                     decoration: InputDecoration(
                       labelText: widget.label != null ? ' ${widget.label} ' : null,
                       labelStyle: GoogleFonts.prompt(
-                        color: whiteColor,
+                        color: widget.labelColor,
                         // backgroundColor: blueColor,
                       ),
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       helperText: widget.helper,
+                      helperStyle: GoogleFonts.prompt(
+                        color: widget.helperColor,
+                      ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: widget.focusTextFieldColor!,

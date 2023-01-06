@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:seed/components/bottom_menu.dart';
 import 'package:seed/components/color.dart';
 import 'package:seed/components/font_format.dart';
@@ -17,8 +18,33 @@ class Rank extends StatefulWidget {
 String rank = 'อันดับภาค';
 
 class _RankState extends State<Rank> {
+  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+  void _onRefresh() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+    // _getPlayers();
+
+    setState(() {});
+  }
+
+  void _onLoading() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use loadFailed(),if no data return,use LoadNodata()
+    // items.add((items.length+1).toString());
+    // if(mounted)
+    // setState(() {
+
+    // });
+    _refreshController.loadComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+
     return ScreenUtilInit(builder: (BuildContext context, Widget? child) {
       return Scaffold(
         backgroundColor: bgGreyColor,
@@ -36,220 +62,224 @@ class _RankState extends State<Rank> {
         ),
         body: Stack(
           children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 55.w),
-              child: Column(
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: blueColor,
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 10.w, bottom: 10.w),
-                      child: Column(
-                        children: [
-                          Row(
-                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                // width: 100.w,
-                                child: Column(
-                                  children: [
-                                    FontFormat(
-                                      text: 'อันดับ',
-                                      textColor: yellowColor,
-                                    ),
-                                    SizedBox(height: 5.w),
-                                    FontFormat(
-                                      text: '99,999',
-                                      weight: FontWeight.w600,
-                                      textColor: whiteColor,
-                                      size: 22.w,
-                                    )
-                                  ],
+            SmartRefresher(
+              enablePullDown: true,
+              enablePullUp: true,
+              header: WaterDropMaterialHeader(
+                backgroundColor: blueColor,
+              ),
+              controller: _refreshController,
+              onRefresh: _onRefresh,
+              onLoading: _onLoading,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 55.w),
+                child: Column(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: blueColor,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 10.w, bottom: 10.w),
+                        child: Column(
+                          children: [
+                            Row(
+                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Expanded(
+                                  // width: 100.w,
+                                  child: Column(
+                                    children: [
+                                      FontFormat(
+                                        text: 'อันดับ',
+                                        textColor: yellowColor,
+                                      ),
+                                      SizedBox(height: 5.w),
+                                      FontFormat(
+                                        text: '99,999',
+                                        weight: FontWeight.w600,
+                                        textColor: whiteColor,
+                                        size: 22.w,
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                // width: 80.w,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: 70.w,
-                                      height: 70.w,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        image: DecorationImage(
-                                          image: AssetImage('images/messageImage_1667365186104 4.png'),
-                                          fit: BoxFit.cover,
+                                Expanded(
+                                  // width: 80.w,
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        width: 70.w,
+                                        height: 70.w,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(50),
+                                          image: DecorationImage(
+                                            image: AssetImage('images/messageImage_1667365186104 4.png'),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 5.w),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  // width: 100.w,
+                                  child: Column(
+                                    children: [
+                                      FontFormat(
+                                        text: 'คะแนน',
+                                        textColor: yellowColor,
+                                      ),
+                                      SizedBox(height: 5.w),
+                                      FontFormat(
+                                        text: '99,999',
+                                        weight: FontWeight.w600,
+                                        textColor: whiteColor,
+                                        size: 22.w,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            FontFormat(
+                              text: args['first_name_th'],
+                              weight: FontWeight.w600,
+                              textColor: whiteColor,
+                              size: 15.w,
+                              align: TextAlign.center,
+                              line: 2,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 15.w,
+                        bottom: 15.w,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                rank = 'อันดับภาค';
+                              });
+                            },
+                            child: rank == 'อันดับภาค'
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: blueColor,
+                                          width: 2,
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 5.w),
-                                    // FontFormat(
-                                    //   text: 'มณีจันทร์',
-                                    //   weight: FontWeight.w600,
-                                    //   textColor: whiteColor,
-                                    //   size: 15.w,
-                                    // )
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                // width: 100.w,
-                                child: Column(
-                                  children: [
-                                    FontFormat(
-                                      text: 'คะแนน',
-                                      textColor: yellowColor,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: FontFormat(
+                                        text: 'อันดับภาค',
+                                        size: 12.w,
+                                        weight: FontWeight.w600,
+                                        textColor: blackColor,
+                                      ),
                                     ),
-                                    SizedBox(height: 5.w),
-                                    FontFormat(
-                                      text: '99,999',
-                                      weight: FontWeight.w600,
-                                      textColor: whiteColor,
-                                      size: 22.w,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
+                                  )
+                                : Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Colors.transparent,
+                                          width: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: FontFormat(
+                                        text: 'อันดับภาค',
+                                        size: 12.w,
+                                        weight: FontWeight.w600,
+                                        textColor: blackColor,
+                                      ),
+                                    ),
+                                  ),
                           ),
-                          FontFormat(
-                            text: 'มณีจันทร์',
-                            weight: FontWeight.w600,
-                            textColor: whiteColor,
-                            size: 15.w,
-                            align: TextAlign.center,
-                            line: 2,
-                            overflow: TextOverflow.ellipsis,
-                          )
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                rank = 'อันดับระดับประเทศ';
+                              });
+                            },
+                            child: rank == 'อันดับระดับประเทศ'
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: blueColor,
+                                          width: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: FontFormat(
+                                        text: 'อันดับระดับประเทศ',
+                                        size: 12.w,
+                                        weight: FontWeight.w600,
+                                        textColor: blackColor,
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Colors.transparent,
+                                          width: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: FontFormat(
+                                        text: 'อันดับระดับประเทศ',
+                                        size: 12.w,
+                                        weight: FontWeight.w600,
+                                        textColor: blackColor,
+                                      ),
+                                    ),
+                                  ),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: 15.w,
-                      bottom: 15.w,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              rank = 'อันดับภาค';
-                            });
-                          },
-                          child: rank == 'อันดับภาค'
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: blueColor,
-                                        width: 2,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 5),
-                                    child: FontFormat(
-                                      text: 'อันดับภาค',
-                                      size: 12.w,
-                                      weight: FontWeight.w600,
-                                      textColor: blackColor,
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: Colors.transparent,
-                                        width: 2,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 5),
-                                    child: FontFormat(
-                                      text: 'อันดับภาค',
-                                      size: 12.w,
-                                      weight: FontWeight.w600,
-                                      textColor: blackColor,
-                                    ),
-                                  ),
-                                ),
+                    Expanded(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: shadow,
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(5),
                         ),
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              rank = 'อันดับระดับประเทศ';
-                            });
-                          },
-                          child: rank == 'อันดับระดับประเทศ'
-                              ? Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: blueColor,
-                                        width: 2,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 5),
-                                    child: FontFormat(
-                                      text: 'อันดับระดับประเทศ',
-                                      size: 12.w,
-                                      weight: FontWeight.w600,
-                                      textColor: blackColor,
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: Colors.transparent,
-                                        width: 2,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 5),
-                                    child: FontFormat(
-                                      text: 'อันดับระดับประเทศ',
-                                      size: 12.w,
-                                      weight: FontWeight.w600,
-                                      textColor: blackColor,
-                                    ),
-                                  ),
-                                ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: whiteColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: shadow,
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(5),
+                        child: rank == 'อันดับภาค' ? sector() : country(),
                       ),
-                      child: rank == 'อันดับภาค' ? sector() : country(),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Align(

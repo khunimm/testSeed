@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, deprecated_member_use
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, deprecated_member_use, prefer_interpolation_to_compose_strings, non_constant_identifier_names, unused_local_variable, use_build_context_synchronously, avoid_print, duplicate_ignore, unnecessary_null_comparison
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
@@ -8,6 +9,7 @@ import 'package:seed/components/color.dart';
 import 'package:seed/components/font_format.dart';
 import 'package:seed/components/textfield_format.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../components/api/api_global.dart' as api_global;
 
 const phoneNumber = '0918049645';
 const urlTel = 'tel:$phoneNumber';
@@ -21,9 +23,61 @@ class LoginPage extends StatefulWidget {
 
 String page = 'login';
 bool isChecked = false;
+bool checkUsername = true;
+bool checkPassword = true;
 final formKey = GlobalKey<FormState>(); //key for form
 
+TextEditingController _username = TextEditingController();
+TextEditingController _password = TextEditingController();
+
 class _LoginPageState extends State<LoginPage> {
+  String url_login = api_global.url + '/auth/mobile/login';
+
+  Future login() async {
+    final body = ({"email": _username.text, "password": _password.text});
+
+    var dio = Dio();
+    var data = await dio.post(url_login, data: body);
+    var jsonData = data.data;
+
+    // // ignore: avoid_print
+    // ignore: avoid_print
+    print(jsonData['status']);
+    if (jsonData['status'] == 'success') {
+      setState(() {
+        checkUsername = true;
+        checkPassword = true;
+      });
+
+      print(jsonData['data']);
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BottomNavbar(
+            numPage: 0,
+          ),
+        ),
+      );
+
+      print('login success');
+
+      api_global.box.write('s_id', jsonData['data'].toString());
+      print(api_global.box.read('s_id'));
+    } else if (jsonData['status'] == 'failed password') {
+      setState(() {
+        checkUsername = true;
+        checkPassword = false;
+      });
+    } else {
+      setState(() {
+        checkUsername = false;
+        checkPassword = false;
+      });
+      // _unsuccess();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,12 +113,16 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         TextfieldFormat(
+                          controller: _username,
                           label: 'อีเมล',
                           text: 'example@xyz.com',
                           keyboardType: TextInputType.emailAddress,
                           textFieldColor: blueShadow,
-                          borderColor: blueShadow,
-                          focusTextFieldColor: whiteColor,
+                          borderColor: checkUsername ? blueShadow : declineRedColor,
+                          labelColor: checkUsername ? whiteColor : declineRedColor,
+                          helper: checkUsername ? null : 'อีเมลไม่ถูกต้อง',
+                          helperColor: checkUsername ? Colors.transparent : declineRedColor,
+                          focusTextFieldColor: checkUsername ? whiteColor : declineRedColor,
                           textColor: whiteColor,
                           shadow: Colors.transparent,
                           hintColor: Color(0xffA0A5C9),
@@ -75,12 +133,16 @@ class _LoginPageState extends State<LoginPage> {
                         TextfieldFormat(
                           label: 'รหัสผ่าน',
                           text: 'รหัสผ่าน',
+                          controller: _password,
                           keyboardType: TextInputType.visiblePassword,
                           textFieldColor: blueShadow,
-                          borderColor: blueShadow,
+                          borderColor: checkPassword ? blueShadow : Colors.red,
+                          labelColor: checkPassword ? whiteColor : Colors.red,
+                          helper: checkPassword ? null : 'รหัสผ่านไม่ถูกต้อง',
+                          helperColor: checkPassword ? Colors.transparent : declineRedColor,
                           textColor: whiteColor,
                           shadow: Colors.transparent,
-                          focusTextFieldColor: whiteColor,
+                          focusTextFieldColor: checkPassword ? whiteColor : Colors.red,
                           hintColor: Color(0xffA0A5C9),
                           defaultIcon: Iconsax.eye_slash,
                           icon: Iconsax.eye,
@@ -105,14 +167,11 @@ class _LoginPageState extends State<LoginPage> {
                         InkWell(
                           onTap: isChecked == true
                               ? () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => BottomNavbar(
-                                        numPage: 0,
-                                      ),
-                                    ),
-                                  );
+                                  if (_username.text != '' && _password.text != '') {
+                                    login();
+                                  } else {
+                                    _unsuccess();
+                                  }
                                 }
                               : () {
                                   acceptPrivacy();
@@ -192,6 +251,54 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _unsuccess() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Padding(
+            padding: EdgeInsets.only(bottom: 15.w),
+            child: FontFormat(
+              text: 'กรุณากรอกข้อมูลให้ครบถ้วนเพื่อทำการเข้าสู่ระบบ',
+              size: 14.w,
+              align: TextAlign.center,
+            ),
+          ),
+          actions: <Widget>[
+            Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xffECECEC),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 5.w, bottom: 5.w),
+                        child: Center(
+                          child: FontFormat(
+                            text: 'กรอกข้อมูล',
+                            size: 14.w,
+                            textColor: blackColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        );
+      },
     );
   }
 

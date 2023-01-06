@@ -28,12 +28,14 @@ class _UpgradeEducationState extends State<UpgradeEducation> {
     final imageTemporary = File(image.path);
 
     setState(() {
-      this._image = imageTemporary;
+      _image = imageTemporary;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
     return ScreenUtilInit(
       builder: (BuildContext context, Widget? child) {
         return Scaffold(
@@ -81,13 +83,13 @@ class _UpgradeEducationState extends State<UpgradeEducation> {
                               padding: 5.w,
                               paddingSecond: 18.w,
                               widthCard: 75.w,
-                              heightCard: 62.h,
+                              heightCard: 52.w,
                               curvePosition: 55.w,
                               curveRadius: 10.w,
                               borderRadius: 5.w,
                               image: 'images/messageImage_1667365186104 4.png',
-                              qrImage: 'images/qr-code.png',
-                              qrImageSize: 15.w,
+                              qrImage: 'images/Group 270.png',
+                              qrImageSize: 12.w,
                               imageSize: 15.w,
                               name: 'มณีจันทร์',
                               nameSize: 2.w,
@@ -114,15 +116,15 @@ class _UpgradeEducationState extends State<UpgradeEducation> {
                               padding: 8.w,
                               paddingSecond: 18.w,
                               widthCard: 223.w,
-                              heightCard: 206.h,
+                              heightCard: 186.w,
                               curvePosition: 143.w,
                               curveRadius: 15.w,
                               borderRadius: 5.w,
                               image: 'images/messageImage_1667365186104 4.png',
-                              qrImage: 'images/qr-code.png',
+                              qrImage: 'images/Group 270.png',
                               qrImageSize: 45.w,
                               imageSize: 45.w,
-                              name: 'มณีจันทร์',
+                              name: args['first_name_th'],
                               nameSize: 12.w,
                               lastName: 'จันทร์มณีกุล',
                               lastNameSize: 12.w,
@@ -144,7 +146,8 @@ class _UpgradeEducationState extends State<UpgradeEducation> {
                         Padding(
                           padding: EdgeInsets.only(top: 15.w, bottom: 15.w),
                           child: FontFormat(
-                            text: '* กรุณาแนบหลักฐานในระดับอุดมศึกษา เช่น บัตรนักศึกษา, หลักฐานทางการศึกษา, ... โดยคุณสามารถแนบหลักฐานได้เพียง 1 ภาพเท่านั้น',
+                            text:
+                                '* กรุณาแนบหลักฐานในระดับอุดมศึกษา เช่น บัตรนักศึกษา, หลักฐานทางการศึกษา, ... โดยคุณสามารถแนบหลักฐานได้เพียง 1 ภาพเท่านั้น',
                             weight: FontWeight.w600,
                             textColor: blueColor,
                           ),
