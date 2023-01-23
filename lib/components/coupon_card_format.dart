@@ -204,7 +204,7 @@ class CouponCardFormat extends StatelessWidget {
                     ),
                   ),
                 ],
-                SizedBox(height: 5.w),
+                SizedBox(height: 10.w),
                 FontFormat(
                   text: seedId,
                   textColor: whiteColor,

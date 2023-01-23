@@ -63,6 +63,8 @@ class _LoginPageState extends State<LoginPage> {
       print('login success');
 
       api_global.box.write('s_id', jsonData['data'].toString());
+      api_global.box.write('z_id', jsonData['zid'].toString());
+      
       print(api_global.box.read('s_id'));
     } else if (jsonData['status'] == 'failed password') {
       setState(() {

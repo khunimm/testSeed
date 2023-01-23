@@ -14,33 +14,57 @@ import 'package:seed/screens/profilepage.dart';
 class BottomNavbar extends StatefulWidget {
   int numPage;
 
-  BottomNavbar({Key? key, required this.numPage}) : super(key: key);
+  BottomNavbar({
+    Key? key,
+    required this.numPage,
+  }) : super(key: key);
 
   @override
   State<BottomNavbar> createState() => _BottomNavbarState();
 }
 
+late ScrollController _scrollController;
+
+void _scrollToTop() {
+  _scrollController.animateTo(0, duration: const Duration(seconds: 3), curve: Curves.linear);
+}
+
 class _BottomNavbarState extends State<BottomNavbar> {
-  final List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    CampStatus(),
-    NotificationScreen(),
-    ProfilePage(),
-  ];
-  void _onItemTapped(int index) {
-    setState(() {
-      widget.numPage = index;
-      print('This is numpage ${widget.numPage}');
-    });
-    @override
-    Widget build(BuildContext context) {
-      return Container();
-    }
-  }
+  final ScrollController _firstTabBarScrollController = ScrollController();
+
+  List<Widget> _widgetOptions = <Widget>[];
 
   @override
   void initState() {
     super.initState();
+    _widgetOptions = <Widget>[
+      HomePage(
+        firstTabBarScrollController: _firstTabBarScrollController,
+      ),
+      CampStatus(),
+      NotificationScreen(
+        firstTabBarScrollController: _firstTabBarScrollController,
+      ),
+      ProfilePage(),
+    ];
+  }
+
+  void _onItemTapped(int index) {
+    // print(index);
+    setState(
+      () {
+        widget.numPage = index;
+        print('This is numpage ${widget.numPage}');
+      },
+    );
+    if (index == 0 || index == 2 && _firstTabBarScrollController.hasClients) {
+      print('test');
+      _firstTabBarScrollController.animateTo(
+        0,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   @override

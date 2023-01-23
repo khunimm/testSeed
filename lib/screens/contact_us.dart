@@ -18,6 +18,7 @@ const toEmail = 'seedprojectthailand@gmail.com';
 const urlEmail = 'mailto:$toEmail';
 
 const urlWeb = 'https://seed-thailand.com/';
+const url_GoogleMap = 'https://goo.gl/maps/MR5AaSN2QvUYhMjq6';
 
 class ContactUs extends StatefulWidget {
   ContactUs({Key? key}) : super(key: key);
@@ -49,25 +50,34 @@ class _ContactUsState extends State<ContactUs> {
             padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 55.w),
             child: Column(
               children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: shadow,
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3), // changes position of shadow
+                InkWell(
+                  onTap: () async {
+                    if (await canLaunch(urlFacebook)) {
+                      await launch(
+                        url_GoogleMap,
+                      );
+                    }
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: shadow,
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(5),
+                      color: whiteColor,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(10.w),
+                      child: ContactFormat(
+                        icon: Iconsax.location,
+                        title: 'อาคารไอทาวเวอร์ ชั้น 15 888 ถ.วิภาวดีรังสิต แขวงจตุจักร เขตจตุจักร กรุงเทพมหานคร 10900 ประเทศไทย',
                       ),
-                    ],
-                    borderRadius: BorderRadius.circular(5),
-                    color: whiteColor,
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(10.w),
-                    child: ContactFormat(
-                      icon: Iconsax.location,
-                      title: 'อาคารไอทาวเวอร์ ชั้น 15 888 ถ.วิภาวดีรังสิต แขวงจตุจักร เขตจตุจักร กรุงเทพมหานคร 10900 ประเทศไทย',
                     ),
                   ),
                 ),

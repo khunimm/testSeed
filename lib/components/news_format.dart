@@ -31,7 +31,7 @@ class NewsFormat extends StatelessWidget {
               'title': title,
               'detail': detail,
               'image': image,
-              'period': period,
+              // 'period': period,
             });
           },
           child: Padding(

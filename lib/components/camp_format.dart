@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_brace_in_string_interps
+// ignore_for_file: prefer_const_constructors, unnecessary_brace_in_string_interps, unrelated_type_equality_checks
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,6 +19,7 @@ class CampFormat extends StatelessWidget {
   final String? seedCoin;
   final String? require;
   final String? status;
+  final int? e_id;
 
   const CampFormat({
     Key? key,
@@ -35,7 +36,10 @@ class CampFormat extends StatelessWidget {
     this.seedCoin,
     this.statusComplete,
     this.status,
+    this.e_id,
   }) : super(key: key);
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +48,7 @@ class CampFormat extends StatelessWidget {
         return InkWell(
           onTap: () {
             Navigator.pushNamed(context, '/detailCamp', arguments: {
+              'e_id': e_id,
               'title': title,
               'detail': detail,
               'statusComplete': statusComplete,
@@ -56,6 +61,8 @@ class CampFormat extends StatelessWidget {
               'campPoint': campPoint,
               'seedCoin': seedCoin,
               'image': image,
+              // ignore: equal_keys_in_map
+              'status': "",
             });
           },
           child: Padding(
@@ -82,7 +89,7 @@ class CampFormat extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     FontFormat(
-                      text: '$title+ • ',
+                      text: '$title',
                       size: 14.w,
                       weight: FontWeight.w500,
                       line: 1,
@@ -95,7 +102,7 @@ class CampFormat extends StatelessWidget {
                       ),
                     ] else ...[
                       FontFormat(
-                        text: statusComplete,
+                        text: statusComplete == '3' ? 'เข้าค่ายสำเร็จ' : null,
                         textColor: greyColor,
                       ),
                     ],
@@ -115,7 +122,7 @@ class CampFormat extends StatelessWidget {
                         ),
                         SizedBox(width: 5.w),
                         Expanded(
-                          flex:2,
+                          flex: 2,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

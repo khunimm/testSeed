@@ -23,6 +23,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   String check_server = api_global.url + '/auth/mobile/check_server';
+  String test = 'waiting';
 
   GetStorage box = GetStorage();
 
@@ -40,20 +41,20 @@ class _SplashScreenState extends State<SplashScreen> {
     // print(box.read('s_id'));
     // if (box.read('s_id') == null) {
     //   print('yes');
-    //   // Navigator.of(context).pushReplacement(
-    //   //   CupertinoPageRoute(
-    //   //     builder: (ctx) => LoginPage()
-    //   //   ),
-    //   // );
+    //   Navigator.of(context).pushReplacement(
+    //     CupertinoPageRoute(
+    //       builder: (ctx) => LoginPage()
+    //     ),
+    //   );
     // } else {
     //   print('no');
-    //   // Navigator.of(context).pushReplacement(
-    //   //   CupertinoPageRoute(
-    //   //     builder: (ctx) => BottomNavbar(
-    //   //       numPage: 0,
-    //   //     ),
-    //   //   ),
-    //   // );
+    //   Navigator.of(context).pushReplacement(
+    //     CupertinoPageRoute(
+    //       builder: (ctx) => BottomNavbar(
+    //         numPage: 0,
+    //       ),
+    //     ),
+    //   );
     // }
   }
 
@@ -68,9 +69,13 @@ class _SplashScreenState extends State<SplashScreen> {
     var dio = Dio();
     var data = await dio.get(check_server);
     var json = data.data['status'];
-    // print(json);
+    print(json);
 
-    if (json == 'success') {
+    setState(() {
+      test = json;
+    });
+
+    if (json == "success") {
       _timer.cancel();
       init();
     } else {
@@ -149,6 +154,14 @@ class _SplashScreenState extends State<SplashScreen> {
                         Center(
                           child: FontFormat(
                             text: 'powered by \nAlpaca media and technology solutions\nv1.0.1',
+                            align: TextAlign.center,
+                            textColor: greyColor,
+                            size: 12.w,
+                          ),
+                        ),
+                        Center(
+                          child: FontFormat(
+                            text: test,
                             align: TextAlign.center,
                             textColor: greyColor,
                             size: 12.w,

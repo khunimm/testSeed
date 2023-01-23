@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:seed/components/bottom_navbar.dart';
 import 'package:seed/screens/application_detail.dart';
 import 'package:seed/screens/camp_history.dart';
@@ -45,11 +47,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final ScrollController _firstTabBarScrollController = ScrollController();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // theme: Theme.of(context).copyWith(
-      //   appBarTheme: Theme.of(context).appBarTheme.copyWith(systemOverlayStyle: SystemUiOverlayStyle.dark),
-      // ),
       theme: ThemeData(fontFamily: 'Prompt'),
       title: 'SEED',
       initialRoute: '/',
@@ -59,9 +60,13 @@ class MyApp extends StatelessWidget {
               numPage: 0,
             ),
         '/loginPage': (context) => LoginPage(),
-        '/homepage': (context) => HomePage(),
+        '/homepage': (context) => HomePage(
+              firstTabBarScrollController: _firstTabBarScrollController,
+            ),
         '/campStatus': (context) => CampStatus(),
-        '/notification': (context) => NotificationScreen(),
+        '/notification': (context) => NotificationScreen(
+              firstTabBarScrollController: _firstTabBarScrollController,
+            ),
         '/profile': (context) => ProfilePage(),
         '/detailNews': (context) => DetailNews(),
         '/detailCamp': (context) => DetailCamp(),

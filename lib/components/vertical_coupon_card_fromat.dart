@@ -51,8 +51,8 @@ class VerticalCouponCardFromat extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: 100.w,
-                    height: 100.w,
+                    width: 90.w,
+                    height: 90.w,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       image: DecorationImage(
@@ -61,7 +61,7 @@ class VerticalCouponCardFromat extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(height: 10.w),
                   FontFormat(
                     text: seedId,
                     textColor: whiteColor,

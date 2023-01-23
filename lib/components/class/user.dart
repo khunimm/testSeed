@@ -19,7 +19,8 @@ class User {
   String? id_number;
   String? created_at;
   String? updated_at;
-  String? score_rank;
+  int? score_rank;
+  String? rank_name;
   String? point;
   String? nick_name_th;
   String? first_name_en;
@@ -29,6 +30,8 @@ class User {
   String? events;
   String? badge_status;
   String? is_member;
+
+  String? countEventSuccess;
 
   User();
 }

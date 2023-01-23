@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,6 +18,8 @@ class StatusFormat extends StatelessWidget {
   final String? location;
   final String? persons;
   final String? period;
+  final int? e_id;
+  final String? statusComplete;
 
   const StatusFormat({
     Key? key,
@@ -33,6 +35,8 @@ class StatusFormat extends StatelessWidget {
     this.location,
     this.persons,
     this.period,
+    this.statusComplete,
+    this.e_id,
   }) : super(key: key);
 
   @override
@@ -42,17 +46,20 @@ class StatusFormat extends StatelessWidget {
         return InkWell(
           onTap: () {
             Navigator.pushNamed(context, '/detailCamp', arguments: {
+              'e_id': e_id,
               'title': title,
-              'image': image,
-              'status': status,
               'detail': detail,
+              'statusComplete': statusComplete,
               'exp': exp,
+              'persons': persons,
+              'location': location,
+              'period': period,
+              'require': require,
               'campPoint': campPoint,
               'seedCoin': seedCoin,
-              'require': require,
-              'location': location,
-              'persons': persons,
-              'period': period,
+              'image': image,
+              // ignore: equal_keys_in_map
+              'status': status,
             });
           },
           child: Padding(

@@ -52,13 +52,13 @@ class _DetailNewsState extends State<DetailNews> {
                             size: 18.w,
                           ),
                         ),
-                        Center(
-                          child: FontFormat(
-                            text: args['period'],
-                            textColor: Color(0xffc2c2c2),
-                            size: 14.w,
-                          ),
-                        ),
+                        // Center(
+                        //   child: FontFormat(
+                        //     text: args['period'],
+                        //     textColor: Color(0xffc2c2c2),
+                        //     size: 14.w,
+                        //   ),
+                        // ),
                         SizedBox(height: 20.w),
                         FontFormat(
                           height: 1.65.w,

@@ -1,9 +1,10 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_adjacent_string_concatenation, prefer_interpolation_to_compose_strings, non_constant_identifier_names, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_adjacent_string_concatenation, prefer_interpolation_to_compose_strings, non_constant_identifier_names, sized_box_for_whitespace, avoid_print
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:seed/components/button_setting_format.dart';
@@ -12,6 +13,7 @@ import 'package:seed/components/color.dart';
 import 'package:seed/components/coupon_card_format.dart';
 import 'package:seed/components/font_format.dart';
 import 'package:seed/components/vertical_coupon_card_fromat.dart';
+import 'package:shimmer/shimmer.dart';
 import '../components/api/api_global.dart' as api_global;
 
 class ProfilePage extends StatefulWidget {
@@ -24,25 +26,65 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   String url_getUser = api_global.url + '/seedmembers/mobile/findById/' + api_global.box.read("s_id");
 
+  String url_countEventsSuccess = api_global.url + '/regisEvents/mobile/countEventsSuccess/' + api_global.box.read("s_id");
+
+  String url_mobileFindScoreRankById = api_global.url + '/seedmembers/mobile/mobileFindScoreRankById/';
+
   List<User> users = [];
+
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
+  @override
+  void initState() {
+    super.initState();
+    users.clear();
+  }
+
+  void test() {
+    print(users.length);
+  }
+
+  Future mobileFindScoreRankById(int? score_rank) async {
+    var dio = Dio();
+    var data = await dio.get(url_mobileFindScoreRankById + '$score_rank');
+    var jsonData = data.data;
+    // print('--------------------------------');
+    // print(jsonData['data']['name']);
+
+    return jsonData['data']['name'];
+  }
+
+  Future countCamp() async {
+    var dio = Dio();
+    var data = await dio.get(url_countEventsSuccess);
+    var jsonData = data.data;
+
+    return jsonData['data'].toString();
+  }
+
   Future<List<User>> _getUser() async {
+    users.clear();
+
     var dio = Dio();
     var data = await dio.get(url_getUser);
+
     var jsonData = data.data;
-    var seed_code_test = '';
 
     User users2 = User();
+
     users2.first_name_th = jsonData["data"]["first_name_th"];
     users2.last_name_th = jsonData["data"]["last_name_th"];
     users2.zone = jsonData["data"]["zone"];
     users2.phone_number = jsonData["data"]["phone_number"];
+
     users2.email = jsonData["data"]["email"];
     users2.education = jsonData["data"]["education"];
     users2.seed_code = jsonData["data"]["seed_code"];
     users2.img_profile = jsonData["data"]["img_profile"];
     users2.score_rank = jsonData["data"]["score_rank"];
+
+    String rank_name_front = await mobileFindScoreRankById(users2.score_rank);
+    users2.rank_name = rank_name_front;
 
     //วิธีsplit codeseed 1
     var split_code_seed = users2.seed_code?.split('');
@@ -59,7 +101,15 @@ class _ProfilePageState extends State<ProfilePage> {
     //   }
     // }
     users2.seed_code = split_code_seed.join("");
+
+    String result = await countCamp();
+
+    users2.countEventSuccess = result;
+
+    users2.score_rank = jsonData['data']['score_rank'];
+
     users.add(users2);
+    // users.insert(0, users2);
 
     return users;
   }
@@ -69,11 +119,14 @@ class _ProfilePageState extends State<ProfilePage> {
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
+
+    // users.clear();
+
     _getUser();
+
     setState(() {});
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -104,17 +157,21 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 0),
               child: SingleChildScrollView(
                 child: FutureBuilder(
-                  future: _getUser(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.data == null) {
-                      return Container();
-                    } else {
+                    future: _getUser(),
+                    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                      // if (snapshot.data != null) {
+                      //   return SpinKitFadingCircle(
+                      //     color: blueColor,
+                      //     size: 40,
+                      //   );
+                      // } else {
                       return Column(
                         children: [
                           for (var i = 0; i < 1; i++) ...[
                             SizedBox(height: 16.w),
                             InkWell(
                               onTap: () {
+                                // test();
                                 _showMyDialog(
                                   snapshot.data[i].first_name_th,
                                   snapshot.data[i].last_name_th,
@@ -125,35 +182,52 @@ class _ProfilePageState extends State<ProfilePage> {
                                   snapshot.data[i].seed_code,
                                 );
                               },
-                              child: CouponCardFormat(
-                                padding: 10.w,
-                                paddingSecond: 20.w,
-                                widthCard: MediaQuery.of(context).size.width,
-                                heightCard: 235.w,
-                                curvePosition: 200.w,
-                                curveRadius: 30.w,
-                                borderRadius: 10.w,
-                                image: 'images/messageImage_1667365186104 4.png',
-                                qrImage: 'images/Group 270.png',
-                                qrImageSize: 80.w,
-                                imageSize: 80.w,
-                                name: snapshot.data[i].first_name_th,
-                                nameSize: 16.w,
-                                lastName: snapshot.data[i].last_name_th,
-                                lastNameSize: 16.w,
-                                region: snapshot.data[i].zone,
-                                regionSize: 12.w,
-                                phoneNumber: snapshot.data[i].phone_number,
-                                phoneNumberSize: 12.w,
-                                email: snapshot.data[i].email,
-                                educationSize: 12.w,
-                                colorCard: whiteColor,
-                                color: blueColor,
-                                textColor: blackColor,
-                                education: snapshot.data[i].education,
-                                seedId: snapshot.data[i].seed_code,
-                                seedIdSize: 12.w,
-                              ),
+                              child: snapshot.data != null
+                                  ? CouponCardFormat(
+                                      padding: 10.w,
+                                      paddingSecond: 20.w,
+                                      widthCard: MediaQuery.of(context).size.width,
+                                      heightCard: 235.w,
+                                      curvePosition: 200.w,
+                                      curveRadius: 30.w,
+                                      borderRadius: 10.w,
+                                      image: 'images/messageImage_1667365186104 4.png',
+                                      qrImage: 'images/Group 270.png',
+                                      qrImageSize: 60.w,
+                                      imageSize: 80.w,
+                                      name: users.isEmpty ? "" : snapshot.data[i].first_name_th,
+                                      nameSize: 16.w,
+                                      lastName: users.isEmpty ? "" : snapshot.data[i].last_name_th,
+                                      lastNameSize: 16.w,
+                                      region: users.isEmpty ? "" : snapshot.data[i].zone,
+                                      regionSize: 12.w,
+                                      phoneNumber: users.isEmpty ? "" : snapshot.data[i].phone_number,
+                                      phoneNumberSize: 12.w,
+                                      email: users.isEmpty ? "" : snapshot.data[i].email,
+                                      educationSize: 12.w,
+                                      colorCard: whiteColor,
+                                      color: blueColor,
+                                      textColor: blackColor,
+                                      education: users.isEmpty ? "" : snapshot.data[i].education,
+                                      seedId: users.isEmpty ? "" : snapshot.data[i].seed_code,
+                                      seedIdSize: 12.w,
+                                    )
+                                  : SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 235.w,
+                                      child: Shimmer.fromColors(
+                                        baseColor: lightGreyColor,
+                                        highlightColor: lightGreyColor.withOpacity(0.5),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: lightGreyColor,
+                                            borderRadius: BorderRadius.circular(5.w),
+                                          ),
+                                          width: 65.w,
+                                          height: 60.w,
+                                        ),
+                                      ),
+                                    ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(top: 15.w),
@@ -184,96 +258,235 @@ class _ProfilePageState extends State<ProfilePage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, '/campHistory');
-                                  },
-                                  child: SizedBox(
-                                    width: 90.w,
-                                    height: 82.w,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        FontFormat(
-                                          text: '100',
-                                          weight: FontWeight.bold,
-                                          textColor: blackColor,
-                                          size: 24.w,
-                                        ),
-                                        FontFormat(
-                                          text: 'กิจกรรม',
-                                          textColor: greyColor,
-                                          size: 14.w,
-                                          weight: FontWeight.w500,
-                                        ),
-                                      ],
+                                if (snapshot.data != null) ...[
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pushNamed(context, '/campHistory');
+                                    },
+                                    child: SizedBox(
+                                      width: 90.w,
+                                      height: 82.w,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          FontFormat(
+                                            text: users.isEmpty ? "" : snapshot.data[i].countEventSuccess,
+                                            weight: FontWeight.bold,
+                                            textColor: blackColor,
+                                            size: 24.w,
+                                          ),
+                                          FontFormat(
+                                            text: 'กิจกรรม',
+                                            textColor: greyColor,
+                                            size: 14.w,
+                                            weight: FontWeight.w500,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, '/rank', arguments: {
-                                      'first_name_th': snapshot.data[i].first_name_th,
-                                    });
-                                    // print(snapshot.data[i].first_name_th);
-                                  },
-                                  child: Container(
-                                    width: 90.w,
-                                    height: 82.w,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 65.w,
-                                          height: 60.w,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(50),
-                                            image: DecorationImage(
-                                              image: AssetImage('images/rank_gold copy 1.png'),
-                                              fit: BoxFit.fill,
+                                ] else ...[
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                        width: 90.w,
+                                        height: 60.w,
+                                        child: Shimmer.fromColors(
+                                          baseColor: lightGreyColor,
+                                          highlightColor: lightGreyColor.withOpacity(0.5),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: lightGreyColor,
+                                              borderRadius: BorderRadius.circular(5.w),
                                             ),
+                                            width: 65.w,
+                                            height: 60.w,
                                           ),
                                         ),
-                                        FontFormat(
-                                          text: 'BRONZE IV',
-                                          weight: FontWeight.w500,
-                                          textColor: blackColor,
-                                          size: 14.w,
+                                      ),
+                                      SizedBox(
+                                        height: 5.w,
+                                      ),
+                                      SizedBox(
+                                        width: 90.w,
+                                        height: 20.w,
+                                        child: Shimmer.fromColors(
+                                          baseColor: lightGreyColor,
+                                          highlightColor: lightGreyColor.withOpacity(0.5),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: lightGreyColor,
+                                              borderRadius: BorderRadius.circular(5.w),
+                                            ),
+                                            width: 65.w,
+                                            height: 60.w,
+                                          ),
                                         ),
-                                      ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                                if (snapshot.data != null) ...[
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pushNamed(context, '/rank', arguments: {
+                                        'first_name_th': snapshot.data[i].first_name_th,
+                                      });
+                                      // print(snapshot.data[i].first_name_th);
+                                    },
+                                    child: Container(
+                                      width: 90.w,
+                                      height: 82.w,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          if (users.isEmpty) ...[
+                                            Container(
+                                              width: 65.w,
+                                              height: 60.w,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(50),
+                                                color: Colors.transparent,
+                                              ),
+                                            ),
+                                          ] else ...[
+                                            Container(
+                                              width: 65.w,
+                                              height: 60.w,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(50),
+                                                image: DecorationImage(
+                                                  image: AssetImage('images/' + snapshot.data[i].rank_name + '.png'),
+                                                  // image: AssetImage('images/GOLD.png'),
+
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                          FontFormat(
+                                            text: users.isEmpty ? "" : snapshot.data[i].rank_name,
+                                            weight: FontWeight.w500,
+                                            textColor: blackColor,
+                                            size: 14.w,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, '/redeemCoin');
-                                  },
-                                  child: Container(
-                                    // color: declineRedColor,
-                                    width: 90.w,
-                                    height: 82.w,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        FontFormat(
-                                          text: '100',
-                                          weight: FontWeight.bold,
-                                          textColor: blackColor,
-                                          size: 24.w,
+                                ] else ...[
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                        width: 90.w,
+                                        height: 60.w,
+                                        child: Shimmer.fromColors(
+                                          baseColor: lightGreyColor,
+                                          highlightColor: lightGreyColor.withOpacity(0.5),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: lightGreyColor,
+                                              borderRadius: BorderRadius.circular(5.w),
+                                            ),
+                                            width: 65.w,
+                                            height: 60.w,
+                                          ),
                                         ),
-                                        FontFormat(
-                                          text: 'เหรียญรางวัล',
-                                          textColor: greyColor,
-                                          size: 14.w,
-                                          weight: FontWeight.w500,
+                                      ),
+                                      SizedBox(
+                                        height: 5.w,
+                                      ),
+                                      SizedBox(
+                                        width: 90.w,
+                                        height: 20.w,
+                                        child: Shimmer.fromColors(
+                                          baseColor: lightGreyColor,
+                                          highlightColor: lightGreyColor.withOpacity(0.5),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: lightGreyColor,
+                                              borderRadius: BorderRadius.circular(5.w),
+                                            ),
+                                            width: 65.w,
+                                            height: 60.w,
+                                          ),
                                         ),
-                                      ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                                if (snapshot.data != null) ...[
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pushNamed(context, '/redeemCoin');
+                                    },
+                                    child: Container(
+                                      // color: declineRedColor,
+                                      width: 90.w,
+                                      height: 82.w,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          FontFormat(
+                                            text: '-',
+                                            weight: FontWeight.bold,
+                                            textColor: blackColor,
+                                            size: 24.w,
+                                          ),
+                                          FontFormat(
+                                            text: 'เหรียญรางวัล',
+                                            textColor: greyColor,
+                                            size: 14.w,
+                                            weight: FontWeight.w500,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
+                                ] else ...[
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                        width: 90.w,
+                                        height: 60.w,
+                                        child: Shimmer.fromColors(
+                                          baseColor: lightGreyColor,
+                                          highlightColor: lightGreyColor.withOpacity(0.5),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: lightGreyColor,
+                                              borderRadius: BorderRadius.circular(5.w),
+                                            ),
+                                            width: 65.w,
+                                            height: 60.w,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5.w,
+                                      ),
+                                      SizedBox(
+                                        width: 90.w,
+                                        height: 20.w,
+                                        child: Shimmer.fromColors(
+                                          baseColor: lightGreyColor,
+                                          highlightColor: lightGreyColor.withOpacity(0.5),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: lightGreyColor,
+                                              borderRadius: BorderRadius.circular(5.w),
+                                            ),
+                                            width: 65.w,
+                                            height: 60.w,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ],
                             ),
                             SizedBox(
@@ -372,8 +585,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       );
                     }
-                  },
-                ),
+                    // },
+                    ),
               ),
             ),
           ),
@@ -459,6 +672,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () {
                       // Navigator.pushNamed(context, '/loginPage');
                       api_global.box.remove('s_id');
+                      api_global.box.remove('z_id');
                       Phoenix.rebirth(context);
                     },
                     child: Container(

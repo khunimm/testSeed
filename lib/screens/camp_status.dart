@@ -1,11 +1,16 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_import, prefer_interpolation_to_compose_strings, non_constant_identifier_names
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:seed/components/camp_format.dart';
+import 'package:seed/components/class/events.dart';
 import 'package:seed/components/color.dart';
 import 'package:seed/components/font_format.dart';
 import 'package:seed/components/status_format.dart';
+import 'package:shimmer/shimmer.dart';
+import '../components/api/api_global.dart' as api_global;
 
 class CampStatus extends StatefulWidget {
   CampStatus({Key? key}) : super(key: key);
@@ -14,17 +19,72 @@ class CampStatus extends StatefulWidget {
   State<CampStatus> createState() => _CampStatusState();
 }
 
-String status = 'pending';
-bool page = true;
-
 class _CampStatusState extends State<CampStatus> {
+  int status = 0;
+  bool page = true;
+  int? e_id = 0;
+  int count = 0;
+  int total_pending = 4;
+  int total_approved = 4;
+  int total_declined = 4;
+  String url_register_events_checkPending = api_global.url + '/regisEvents/mobile/register/checkStatus';
+
+  Future<List<Events>> _getEvents(int limit) async {
+    final body = ({
+      "s_id": api_global.box.read('s_id'),
+      "approve_status": status,
+      "e_id": e_id,
+      "limit": limit,
+    });
+
+    var dio = Dio();
+    var data = await dio.get(url_register_events_checkPending, queryParameters: body);
+    var jsonData = data.data;
+    // print(jsonData['result']);
+
+    List<Events> data_events = [];
+    count = jsonData['data'].length;
+    print(count);
+    // print(jsonData['data']);
+
+    for (var i in jsonData['data']) {
+      Events events_inLoop = Events();
+
+      events_inLoop.e_id = i['e_id'];
+      events_inLoop.approve_status = i['approve_status'];
+      events_inLoop.name = i['event']['name'];
+      events_inLoop.img = i['event']['img'];
+      events_inLoop.description = i['event']['description'];
+      events_inLoop.point = i['event']['point'];
+      events_inLoop.start_recruit_date = i['event']['start_recruit_date'];
+      events_inLoop.end_recruit_date = i['event']['end_recruit_date'];
+      events_inLoop.member_limit = i['event']['member_limit'];
+      events_inLoop.start_date = i['event']['start_date'];
+      events_inLoop.end_date = i['event']['end_date'];
+
+      data_events.add(events_inLoop);
+    }
+
+    return data_events;
+  }
+
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
+
   void _onRefresh() async {
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
-    // _getPlayers();
+
+    if (status == 0) {
+      total_pending = 4;
+    }
+    if (status == 1) {
+      total_approved = 4;
+    }
+    if (status == 2) {
+      total_declined = 4;
+    }
 
     setState(() {});
   }
@@ -34,10 +94,18 @@ class _CampStatusState extends State<CampStatus> {
     await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use loadFailed(),if no data return,use LoadNodata()
     // items.add((items.length+1).toString());
-    // if(mounted)
-    // setState(() {
-
-    // });
+    if (mounted) {
+      if (status == 0) {
+        total_pending += 2;
+      }
+      if (status == 1) {
+        total_approved += 2;
+      }
+      if (status == 2) {
+        total_declined += 2;
+      }
+      setState(() {});
+    }
     _refreshController.loadComplete();
   }
 
@@ -69,10 +137,11 @@ class _CampStatusState extends State<CampStatus> {
                     InkWell(
                       onTap: () {
                         setState(() {
-                          status = 'pending';
+                          status = 0;
                         });
+                        print("status $status");
                       },
-                      child: status == 'pending'
+                      child: status == 0
                           ? Container(
                               decoration: BoxDecoration(
                                 border: Border(
@@ -115,10 +184,11 @@ class _CampStatusState extends State<CampStatus> {
                     InkWell(
                       onTap: () {
                         setState(() {
-                          status = 'approve';
+                          status = 1;
                         });
+                        print("status $status");
                       },
-                      child: status == 'approve'
+                      child: status == 1
                           ? Container(
                               decoration: BoxDecoration(
                                 border: Border(
@@ -161,10 +231,11 @@ class _CampStatusState extends State<CampStatus> {
                     InkWell(
                       onTap: () {
                         setState(() {
-                          status = 'declined';
+                          status = 2;
                         });
+                        print("status $status");
                       },
-                      child: status == 'declined'
+                      child: status == 2
                           ? Container(
                               decoration: BoxDecoration(
                                 border: Border(
@@ -207,13 +278,24 @@ class _CampStatusState extends State<CampStatus> {
                   ],
                 ),
                 SizedBox(height: 20.w),
-                if (status == 'pending') ...[
+                if (status == 0) ...[
                   pending(),
-                ] else if (status == 'approve') ...[
+                ] else if (status == 1) ...[
                   approved(),
                 ] else ...[
                   declined(),
                 ],
+                // if (count == 0) ...[
+                //   empty()
+                // ] else ...[
+                //   if (status == 0) ...[
+                //     pending(),
+                //   ] else if (status == 1) ...[
+                //     approved(),
+                //   ] else ...[
+                //     declined(),
+                //   ],
+                // ]
               ],
             ),
           ),
@@ -233,26 +315,55 @@ class _CampStatusState extends State<CampStatus> {
         controller: _refreshController,
         onRefresh: _onRefresh,
         onLoading: _onLoading,
-        child: ListView(
-          // physics: const NeverScrollableScrollPhysics(),
-          // shrinkWrap: true,
-          children: [
-            StatusFormat(
-              status: 'รอการอนุมัติ',
-              image: 'images/314892169_1151132685531547_2858263846283668721_n.jpeg',
-              title: 'เปิดรับสมัครอบรมออนไลน์ “SEED TikTok Reporter รุ่นที่ 1',
-              detail:
-                  "SEED Thailand ร่วมกับ เครือข่ายสำนักข่าวออนไลน์ จัดอบรมออนไลน์กับน้อง ๆ เยาวชนที่สนใจเรียนรู้การเป็นนักข่าวออนไลน์เบื้องต้น หลังจบอบรมสามารถสร้างรายได้ได้จริงในกิจกรรม SEED TikTok Reporter กิจกรรมนี้เหมาะใคร -เหมาะสำหรับผู้ที่ต้องการใช้เวลาว่างให้เป็นประโยชน์ -เหมาะสำหรับผู้ที่ต้องการสร้างรายได้พิเศษระหว่างเรียน -เหมาะสำหรับผู้ที่ชอบการเล่าเขียน อ่านเขียน หรือ หางานอดิเรกด้านสื่อ -เหมาะสำหรับผู้ที่อยู่ฝึกฝนเพิ่มทักษะการเป็น Digital Journalist รายละเอียดเพิ่มเติมโทร 091-804-9645 คุณกัส เนื้อหารายละเอียดหลักสูตรอยู่ใต้โพสต์",
-              time: '5 days ago',
-              exp: '9 พฤศจิกายน 2565',
-              period: '12 พฤศจิกายน 2565 - 13 พฤศจิกายน 2565',
-              seedCoin: '8,900',
-              campPoint: '25,900',
-              location: 'อาคาร ไอทาวเวอร์',
-              require: 'ผู้ผ่านกิจกรรมสตาฟSEED',
-              persons: '199',
-            ),
-          ],
+        child: FutureBuilder(
+          future: _getEvents(total_pending),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            // print(" mm ${snapshot.data}");
+            if (snapshot.data == null) {
+              return SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 235.w,
+                child: Shimmer.fromColors(
+                  baseColor: lightGreyColor,
+                  highlightColor: lightGreyColor.withOpacity(0.5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: lightGreyColor,
+                      borderRadius: BorderRadius.circular(5.w),
+                    ),
+                    width: 65.w,
+                    height: 60.w,
+                  ),
+                ),
+              );
+            } else {
+              if (count == 0) {
+                return empty();
+              }
+              return ListView(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                children: [
+                  for (var j = 0; j < count; j++)
+                    StatusFormat(
+                      e_id: snapshot.data[j].e_id,
+                      status: snapshot.data[j].approve_status.toString(),
+                      image: 'images/314892169_1151132685531547_2858263846283668721_n.jpeg',
+                      title: snapshot.data[j].name,
+                      detail: snapshot.data[j].description,
+                      time: '5 days ago',
+                      exp: snapshot.data[j].end_recruit_date,
+                      period: '${snapshot.data[j].start_date} - ${snapshot.data[j].end_date}',
+                      seedCoin: snapshot.data[j].point.toString(),
+                      campPoint: snapshot.data[j].point.toString(),
+                      location: snapshot.data[j].z_id.toString(),
+                      require: 'ผู้ผ่านกิจกรรมสตาฟ SEED ',
+                      persons: snapshot.data[j].member_limit.toString(),
+                    ),
+                ],
+              );
+            }
+          },
         ),
       ),
     );
@@ -269,41 +380,55 @@ class _CampStatusState extends State<CampStatus> {
         controller: _refreshController,
         onRefresh: _onRefresh,
         onLoading: _onLoading,
-        child: ListView(
-          // physics: const NeverScrollableScrollPhysics(),
-          // shrinkWrap: true,
-          children: [
-            StatusFormat(
-              status: 'ได้รับการอนุมัติ',
-              image: 'images/Screen Shot 2565-12-08 at 17.13.45.png',
-              title: 'เตรียมพบกันกิจกรรมหลังจากนี้จาก พี่ ๆ "SEED Train the trainer" พร้อมกันทั่วประเทศไทยเร็ว ๆ นี้',
-              detail:
-                  "โอกาสนี้ เยาวชนเครือข่าย SEED Thailand ได้รายงานผลการดำเนินงานในท้องถิ่นต่อสมาชิกวุฒิสภา พร้อมเยี่ยมชมการประชุมวุฒิสภา ณ ห้องประชุมจันทรา อาคารรัฐสภา เเละเยี่ยมชมสัปปายะสภาสถาน พร้อมรับฟังการบรรยายสรุปจากเจ้าหน้าที่สำนักประชาสัมพันธ์ สำนักงานเลขาธิการวุฒิสภา ในวันที่ 7 ธันวาคมที่ผ่านมา สำหรับกิจกรรมสัมมนาเชิงปฏิบัติการ SEED Train The Trainer รุ่นที่ 2 นั้นมีวัตถุประสงค์เพื่อพัฒนาศักยภาพเยาวชนระดับอุดมศึกษาให้เป็นวิทยากรรุ่นใหม่อย่างสร้างสรรค์ที่สามารถพัฒนาจนกลายเป็นต้นแบบที่ดีต่อเด็กและเยาวชนโดยทั่วไป และสนับสนุนให้สามารถเป็นวิทยากรในกิจกรรม Seed Project ระดับมัธยมศึกษาต่อไป รวมถึงเป็นการสร้างเครือข่ายเยาวชนคนรุ่นใหม่ให้มีจิตสำนึกรักและมีส่วนร่วมในการพัฒนาชุมชนหรือประเทศชาติอย่างสร้างสรรค์",
-              time: '5 days ago',
-              exp: '9 พฤศจิกายน 2565',
-              period: '7 ธันวาคม 2565',
-              seedCoin: '8,900',
-              campPoint: '25,900',
-              location: 'อาคาร ไอทาวเวอร์',
-              require: 'ผู้ผ่านกิจกรรมสตาฟSEED',
-              persons: '199',
-            ),
-            StatusFormat(
-              status: 'ได้รับการอนุมัติ',
-              image: 'images/298513881_1086460778665405_7000550569760405541_n.png',
-              title: 'กลับมาอีกครั้งกับกิจกรรม SEED Project ปี 2 !!',
-              detail:
-                  "📌 เปิดรับสมัครเยาวชนระดับอุดมศึกษาเข้าร่วมกิจกรรม SEED Project ปี2 ในหัวข้อ “การสร้างผู้นำยุคใหม่ กล้าที่จะเปลี่ยนแปลงท้องถิ่นอย่างสร้างสรรค์” พบกับกิจกรรมสุดพิเศษ ทั้งการบรรยายพิเศษจากผู้เชี่ยวชาญ กิจกรรม workshop พัฒนาท้องถิ่น และกิจกรรมอื่น ๆ ในกิจกรรมอีกมากมาย 📅 กำหนดการ 🔹รุ่น 1 ภาคกลาง ตะวันออกและตะวันตก วันที่ 7-10 กรกฎาคม 2565 ณ กรุงเทพมหานคร 🔹รุ่น 2 ภาคตะวันออกเฉียงเหนือ วันที่ 17-20 กันยายน 2565 ณ ขอนแก่น 🔹รุ่น 3 ภาคใต้ วันที่ 8-11 กันยายน 2565 ณ สงขลา 🔹รุ่น 4 ภาคเหนือ วันที่ 29 กันยายน - 2 ตุลาคม 2565 ณ เชียงใหม่ ใครสนใจสามารถสมัครได้ที่ https://www.seed-thailand.com/register-camp โดยทางกิจกรรมจะประกาศรายชื่อผู้ผ่านการคัดเลือกทั้ง 80 คน ของแต่ละภาค ทางเพจ SEED Thailand เท่านั้น อย่าช้า! โอกาสที่จะได้ร่วมเป็นเยาวชน SEED Thailand แตกหน่อพันธ์ุดี ไม่มีที่สิ้นสุด!",
-              time: '5 days ago',
-              exp: '14 มิถุนายน 2565',
-              period: 'ตามที่กำหนดในกิจกรรม',
-              seedCoin: '8,900',
-              campPoint: '25,900',
-              location: 'ตามที่กำหนดในกิจกรรม',
-              require: 'ผู้ผ่านกิจกรรมสตาฟSEED',
-              persons: '80',
-            ),
-          ],
+        child: FutureBuilder(
+          future: _getEvents(total_approved),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            // print(" mm ${snapshot.data}");
+            if (snapshot.data == null) {
+              return SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 235.w,
+                child: Shimmer.fromColors(
+                  baseColor: lightGreyColor,
+                  highlightColor: lightGreyColor.withOpacity(0.5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: lightGreyColor,
+                      borderRadius: BorderRadius.circular(5.w),
+                    ),
+                    width: 65.w,
+                    height: 60.w,
+                  ),
+                ),
+              );
+            } else {
+              if (count == 0) {
+                return empty();
+              }
+              return ListView(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                children: [
+                  for (var j = 0; j < count; j++)
+                    StatusFormat(
+                      e_id: snapshot.data[j].e_id,
+                      status: snapshot.data[j].approve_status.toString(),
+                      image: 'images/314892169_1151132685531547_2858263846283668721_n.jpeg',
+                      title: snapshot.data[j].name,
+                      detail: snapshot.data[j].description,
+                      time: '5 days ago',
+                      exp: snapshot.data[j].end_recruit_date,
+                      period: '${snapshot.data[j].start_date} - ${snapshot.data[j].end_date}',
+                      seedCoin: snapshot.data[j].point.toString(),
+                      campPoint: snapshot.data[j].point.toString(),
+                      location: snapshot.data[j].z_id.toString(),
+                      require: 'ผู้ผ่านกิจกรรมสตาฟ SEED ',
+                      persons: snapshot.data[j].member_limit.toString(),
+                    ),
+                ],
+              );
+            }
+          },
         ),
       ),
     );
@@ -320,43 +445,64 @@ class _CampStatusState extends State<CampStatus> {
         controller: _refreshController,
         onRefresh: _onRefresh,
         onLoading: _onLoading,
-        child: ListView(
-          // physics: const NeverScrollableScrollPhysics(),
-          // shrinkWrap: true,
-          children: [
-            StatusFormat(
-              status: 'ไม่ได้รับการอนุมัติ',
-              image: 'images/Screen Shot 2565-12-08 at 17.13.45.png',
-              title: 'เตรียมพบกันกิจกรรมหลังจากนี้จาก พี่ ๆ "SEED Train the trainer" พร้อมกันทั่วประเทศไทยเร็ว ๆ นี้',
-              detail:
-                  "โอกาสนี้ เยาวชนเครือข่าย SEED Thailand ได้รายงานผลการดำเนินงานในท้องถิ่นต่อสมาชิกวุฒิสภา พร้อมเยี่ยมชมการประชุมวุฒิสภา ณ ห้องประชุมจันทรา อาคารรัฐสภา เเละเยี่ยมชมสัปปายะสภาสถาน พร้อมรับฟังการบรรยายสรุปจากเจ้าหน้าที่สำนักประชาสัมพันธ์ สำนักงานเลขาธิการวุฒิสภา ในวันที่ 7 ธันวาคมที่ผ่านมา สำหรับกิจกรรมสัมมนาเชิงปฏิบัติการ SEED Train The Trainer รุ่นที่ 2 นั้นมีวัตถุประสงค์เพื่อพัฒนาศักยภาพเยาวชนระดับอุดมศึกษาให้เป็นวิทยากรรุ่นใหม่อย่างสร้างสรรค์ที่สามารถพัฒนาจนกลายเป็นต้นแบบที่ดีต่อเด็กและเยาวชนโดยทั่วไป และสนับสนุนให้สามารถเป็นวิทยากรในกิจกรรม Seed Project ระดับมัธยมศึกษาต่อไป รวมถึงเป็นการสร้างเครือข่ายเยาวชนคนรุ่นใหม่ให้มีจิตสำนึกรักและมีส่วนร่วมในการพัฒนาชุมชนหรือประเทศชาติอย่างสร้างสรรค์",
-              time: '5 days ago',
-              exp: '9 พฤศจิกายน 2565',
-              period: '7 ธันวาคม 2565',
-              seedCoin: '8,900',
-              campPoint: '25,900',
-              location: 'อาคาร ไอทาวเวอร์',
-              require: 'ผู้ผ่านกิจกรรมสตาฟSEED',
-              persons: '199',
-            ),
-            StatusFormat(
-              status: 'ไม่ได้รับการอนุมัติ',
-              image: 'images/298513881_1086460778665405_7000550569760405541_n.png',
-              title: 'กลับมาอีกครั้งกับกิจกรรม SEED Project ปี 2 !!',
-              detail:
-                  "📌 เปิดรับสมัครเยาวชนระดับอุดมศึกษาเข้าร่วมกิจกรรม SEED Project ปี2 ในหัวข้อ “การสร้างผู้นำยุคใหม่ กล้าที่จะเปลี่ยนแปลงท้องถิ่นอย่างสร้างสรรค์” พบกับกิจกรรมสุดพิเศษ ทั้งการบรรยายพิเศษจากผู้เชี่ยวชาญ กิจกรรม workshop พัฒนาท้องถิ่น และกิจกรรมอื่น ๆ ในกิจกรรมอีกมากมาย 📅 กำหนดการ 🔹รุ่น 1 ภาคกลาง ตะวันออกและตะวันตก วันที่ 7-10 กรกฎาคม 2565 ณ กรุงเทพมหานคร 🔹รุ่น 2 ภาคตะวันออกเฉียงเหนือ วันที่ 17-20 กันยายน 2565 ณ ขอนแก่น 🔹รุ่น 3 ภาคใต้ วันที่ 8-11 กันยายน 2565 ณ สงขลา 🔹รุ่น 4 ภาคเหนือ วันที่ 29 กันยายน - 2 ตุลาคม 2565 ณ เชียงใหม่ ใครสนใจสามารถสมัครได้ที่ https://www.seed-thailand.com/register-camp โดยทางกิจกรรมจะประกาศรายชื่อผู้ผ่านการคัดเลือกทั้ง 80 คน ของแต่ละภาค ทางเพจ SEED Thailand เท่านั้น อย่าช้า! โอกาสที่จะได้ร่วมเป็นเยาวชน SEED Thailand แตกหน่อพันธ์ุดี ไม่มีที่สิ้นสุด!",
-              time: '5 days ago',
-              exp: '14 มิถุนายน 2565',
-              period: 'ตามที่กำหนดในกิจกรรม',
-              seedCoin: '8,900',
-              campPoint: '25,900',
-              location: 'ตามที่กำหนดในกิจกรรม',
-              require: 'ผู้ผ่านกิจกรรมสตาฟSEED',
-              persons: '80',
-            ),
-          ],
+        child: FutureBuilder(
+          future: _getEvents(total_declined),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            // print(" mm ${snapshot.data}");
+            if (snapshot.data == null) {
+              return SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 235.w,
+                child: Shimmer.fromColors(
+                  baseColor: lightGreyColor,
+                  highlightColor: lightGreyColor.withOpacity(0.5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: lightGreyColor,
+                      borderRadius: BorderRadius.circular(5.w),
+                    ),
+                    width: 65.w,
+                    height: 60.w,
+                  ),
+                ),
+              );
+            } else {
+              if (count == 0) {
+                return empty();
+              }
+              return ListView(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                children: [
+                  for (var j = 0; j < count; j++) ...[
+                    StatusFormat(
+                      e_id: snapshot.data[j].e_id,
+                      status: snapshot.data[j].approve_status.toString(),
+                      image: 'images/314892169_1151132685531547_2858263846283668721_n.jpeg',
+                      title: snapshot.data[j].name,
+                      detail: snapshot.data[j].description,
+                      time: '5 days ago',
+                      exp: snapshot.data[j].end_recruit_date,
+                      period: '${snapshot.data[j].start_date} - ${snapshot.data[j].end_date}',
+                      seedCoin: snapshot.data[j].point.toString(),
+                      campPoint: snapshot.data[j].point.toString(),
+                      location: snapshot.data[j].z_id.toString(),
+                      require: 'ผู้ผ่านกิจกรรมสตาฟ SEED ',
+                      persons: snapshot.data[j].member_limit.toString(),
+                    ),
+                  ],
+                ],
+              );
+            }
+          },
         ),
       ),
+    );
+  }
+
+  Widget empty() {
+    return Center(
+      child: FontFormat(text: 'ไม่มีข้อมูล'),
     );
   }
 }

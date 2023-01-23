@@ -23,6 +23,7 @@ class TextfieldFormat extends StatefulWidget {
   final Color? iconColor;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
+  final Function(String)? function;
 
   const TextfieldFormat({
     Key? key,
@@ -43,6 +44,7 @@ class TextfieldFormat extends StatefulWidget {
     this.borderColor,
     this.labelColor,
     this.helperColor,
+    this.function,
   }) : super(key: key);
 
   @override
@@ -107,7 +109,7 @@ class _TextfieldFormatState extends State<TextfieldFormat> {
                         ),
                       ),
                       contentPadding: EdgeInsets.symmetric(
-                        vertical: 15.w,
+                        vertical: 20.w,
                         horizontal: 10.w,
                       ),
                       // contentPadding: EdgeInsets.all(10.w),
